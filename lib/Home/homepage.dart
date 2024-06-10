@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:swd392/footer.dart';
+import 'package:swd392/navigation_menu.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key}) : super(key: key);
@@ -12,7 +12,8 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
-      bottomNavigationBar: MyFooter(),
+      backgroundColor: Colors.blue,
+      // bottomNavigationBar: NavigationMenu(),
     );
   }
 }
