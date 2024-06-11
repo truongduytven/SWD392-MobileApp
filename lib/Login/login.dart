@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:swd392/navigation_menu.dart';
+import 'package:TheBusJourney/navigation_menu.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);

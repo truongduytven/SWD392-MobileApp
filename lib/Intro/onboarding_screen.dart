@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import 'package:swd392/Home/homepage.dart';
-import 'package:swd392/Intro/Intro_page_1.dart';
-import 'package:swd392/Intro/Intro_page_2.dart';
-import 'package:swd392/Intro/Intro_page_3.dart';
+import 'package:TheBusJourney/Home/homepage.dart';
+import 'package:TheBusJourney/Intro/Intro_page_1.dart';
+import 'package:TheBusJourney/Intro/Intro_page_2.dart';
+import 'package:TheBusJourney/Intro/Intro_page_3.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});

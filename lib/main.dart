@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:swd392/get_start.dart';
+import 'package:TheBusJourney/get_start.dart';
 
 void main() {
   runApp(const MyApp());

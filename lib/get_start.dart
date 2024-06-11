@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:swd392/Login/login.dart';
+import 'package:TheBusJourney/Login/login.dart';
 // import 'package:swd392/navigation_menu.dart';
 
 class GetStartedPage extends StatelessWidget {
