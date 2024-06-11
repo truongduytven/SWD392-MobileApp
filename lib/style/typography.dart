@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:TheBusJourney/style/color.dart';
+import 'package:swd392/style/color.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 TextStyle headerOne = GoogleFonts.openSans(
