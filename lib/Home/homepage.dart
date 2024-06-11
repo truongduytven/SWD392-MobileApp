@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:swd392/navigation_menu.dart';
-
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key}) : super(key: key);
 
@@ -11,9 +9,8 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      backgroundColor: Colors.blue,
-      // bottomNavigationBar: NavigationMenu(),
+    return Container(
+      child: Text('Trang chủ', style: TextStyle(color: Colors.orange, fontWeight: FontWeight.bold),),
     );
   }
 }

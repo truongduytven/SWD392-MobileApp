@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:swd392/navigation_menu.dart';
+import 'package:swd392/Login/login.dart';
+// import 'package:swd392/navigation_menu.dart';
 
 class GetStartedPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
       child: Container(
+        color: Colors.white,
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
         child: Stack(
@@ -28,7 +30,8 @@ class GetStartedPage extends StatelessWidget {
                   height: MediaQuery.of(context).size.height / 2.666,
                   decoration: BoxDecoration(
                     color: Colors.orange.shade400,
-                  )),
+                  )
+                  ),
             ),
             Align(
               alignment: Alignment.bottomCenter,
@@ -81,7 +84,7 @@ class GetStartedPage extends StatelessWidget {
                         onTap: () {
                           Navigator.push(context,
                               MaterialPageRoute(builder: (context) {
-                            return NavigationMenu();
+                            return LoginPage();
                           }));
                         },
                         child: Container(

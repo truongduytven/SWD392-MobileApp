@@ -39,6 +39,7 @@ dependencies:
   smooth_page_indicator: ^1.0.0
   lottie: ^1.2.1
   google_fonts: ^6.2.1
+  simple_animations: ^5.0.2
 
 dev_dependencies:
   flutter_test:
