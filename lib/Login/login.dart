@@ -18,7 +18,7 @@ class _LoginPageState extends State<LoginPage> {
     String password = passwordController.text;
 
     // Check if the phone number and password match the expected values
-    if (phoneNumber == '0987654321' && password == '123') {
+    if (phoneNumber == '123' && password == '123') {
       // Navigate to the homepage if login is successful
       Navigator.push(context, MaterialPageRoute(builder: (context) {
         return NavigationMenu();
