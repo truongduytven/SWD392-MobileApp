@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:swd392/Home/homepage.dart';
+import 'package:swd392/Search/search_ticket.dart';
 
 class NavigationMenu extends StatefulWidget {
   const NavigationMenu({super.key});
@@ -92,7 +93,7 @@ class _NavigationMenuState extends State<NavigationMenu> {
       case 0:
         return MyHomePage();
       case 1:
-        return const Text('Tra cứu');
+        return SearchTicketPage();
       case 2:
         return const Text('Thông báo');
       case 3:
