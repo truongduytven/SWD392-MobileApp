@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:swd392/Home/list_trip.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key}) : super(key: key);
@@ -187,7 +188,10 @@ class _MyHomePageState extends State<MyHomePage> {
                               IconButton(
                                 icon: Icon(Icons.qr_code_scanner, size: 28),
                                 onPressed: () {
-                                  // Navigate to Soát vé
+                                  Navigator.push(context,
+                                    MaterialPageRoute(builder: (context) {
+                                    return ListTripPage();
+                                  }));
                                 },
                               ),
                               Text(
@@ -207,7 +211,10 @@ class _MyHomePageState extends State<MyHomePage> {
                               IconButton(
                                 icon: Icon(Icons.directions_bus, size: 28),
                                 onPressed: () {
-                                  // Navigate to Chuyến đi
+                                  Navigator.push(context,
+                                    MaterialPageRoute(builder: (context) {
+                                    return ListTripPage();
+                                  }));
                                 },
                               ),
                               Text(
@@ -314,7 +321,8 @@ class _MyHomePageState extends State<MyHomePage> {
                                         decoration: BoxDecoration(
                                           boxShadow: [
                                             BoxShadow(
-                                              color: Colors.grey.withOpacity(0.2),
+                                              color:
+                                                  Colors.grey.withOpacity(0.2),
                                               spreadRadius: 5,
                                               blurRadius: 7,
                                               offset: Offset(0, 2),
@@ -322,19 +330,26 @@ class _MyHomePageState extends State<MyHomePage> {
                                           ],
                                         ),
                                         child: ClipRRect(
-                                          borderRadius: BorderRadius.circular(10),
-                                          child: Image.asset('assets/bus.jpg', fit: BoxFit.cover,),
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          child: Image.asset(
+                                            'assets/bus.jpg',
+                                            fit: BoxFit.cover,
+                                          ),
                                         ),
                                       ),
                                     ),
                                     Container(
                                       width: 200,
-                                      child: Text("Tuyến Sài Gòn- Hà Nội: thay đổi lịch trình", style: TextStyle(
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.w600,
-                                        letterSpacing: 1,
-                                        wordSpacing: 2,
-                                      ),),
+                                      child: Text(
+                                        "Tuyến Sài Gòn- Hà Nội: thay đổi lịch trình",
+                                        style: TextStyle(
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.w600,
+                                          letterSpacing: 1,
+                                          wordSpacing: 2,
+                                        ),
+                                      ),
                                     )
                                   ],
                                 ),
