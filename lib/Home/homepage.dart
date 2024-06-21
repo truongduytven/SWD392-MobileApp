@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:swd392/Home/list_trip.dart';
+import 'package:swd392/Home/list_trip_all_day.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key}) : super(key: key);
@@ -213,7 +214,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                 onPressed: () {
                                   Navigator.push(context,
                                     MaterialPageRoute(builder: (context) {
-                                    return ListTripPage();
+                                    return ListTripAllDayPage();
                                   }));
                                 },
                               ),
@@ -252,7 +253,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                     ),
                     Container(
-                      padding: EdgeInsets.all(20),
+                      padding: EdgeInsets.all(10),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
