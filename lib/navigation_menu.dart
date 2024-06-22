@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:swd392/Home/homepage.dart';
+import 'package:swd392/Notification/notification.dart';
 import 'package:swd392/Profile/edit_profile.dart';
 import 'package:swd392/Profile/profile.dart';
 import 'package:swd392/Search/search_ticket.dart';
@@ -95,11 +96,11 @@ class _NavigationMenuState extends State<NavigationMenu> {
       case 1:
         return SearchTicketPage();
       case 2:
-        return const Text('Thông báo');
+        return NotificationPage();
       case 3:
         return ProfilePage();
       default:
-        return const Text('Trang chủ');
+        return MyHomePage();
     }
   }
 }
