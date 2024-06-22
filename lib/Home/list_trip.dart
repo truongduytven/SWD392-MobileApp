@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:swd392/Data/trip_data.dart';
 import 'package:swd392/Home/list_ticket.dart';
+import 'package:swd392/Home/trip_detail.dart';
+import 'package:swd392/Data/trip.dart';
 
 class ListTripPage extends StatefulWidget {
   const ListTripPage({super.key});
@@ -15,47 +18,6 @@ class _ListTripPageState extends State<ListTripPage> {
 
   @override
   Widget build(BuildContext context) {
-    // Update trip status based on current time
-    // Get the current date
-    DateTime now = DateTime.now();
-    DateTime today = DateTime(now.year, now.month, now.day);
-
-    // Define specific trip times for today
-    List<Trip> trips = [
-      Trip(
-          startLocation: 'TP Hồ Chí Minh',
-          endLocation: 'Bến Tre',
-          time: today.add(Duration(hours: 9))),
-      Trip(
-          startLocation: 'Hà Nội',
-          endLocation: 'Hà Giang',
-          time: today.add(Duration(hours: 12))),
-      Trip(
-          startLocation: 'TP Hồ Chí Minh',
-          endLocation: 'Vũng Tàu',
-          time: today.add(Duration(hours: 15))),
-      Trip(
-          startLocation: 'Bình Thuận',
-          endLocation: 'Bến Tre',
-          time: today.add(Duration(hours: 18))),
-      Trip(
-          startLocation: 'Hà Nội',
-          endLocation: 'Bến Tre',
-          time: today.add(Duration(hours: 9))),
-      Trip(
-          startLocation: 'TP Hồ Chí Minh',
-          endLocation: 'Vũng Tàu',
-          time: today.add(Duration(hours: 12))),
-      Trip(
-          startLocation: 'TP Hồ Chí Minh',
-          endLocation: 'Vũng Tàu',
-          time: today.add(Duration(hours: 15))),
-      Trip(
-          startLocation: 'Bình Thuận',
-          endLocation: 'Ninh Thuận',
-          time: today.add(Duration(hours: 18))),
-    ];
-
     trips.sort((a, b) => a.time.compareTo(b.time));
 
     for (var trip in trips) {
@@ -69,8 +31,9 @@ class _ListTripPageState extends State<ListTripPage> {
     startLocations
         .addAll(trips.map((trip) => trip.startLocation).toSet().toList());
 
+    List<Trip> filteredTrips = trips.where((trip) => trip.date.isAtSameMomentAs(today)).toList();
+
     // Filter trips based on selection
-    List<Trip> filteredTrips = trips;
     if (filter == 'Checked') {
       filteredTrips = filteredTrips.where((trip) => trip.isChecked).toList();
     } else if (filter == 'Unchecked') {
@@ -89,17 +52,32 @@ class _ListTripPageState extends State<ListTripPage> {
         backgroundColor: Colors.orange,
         foregroundColor: Colors.white,
         centerTitle: true,
-        title: const Text(
-          "Soát vé",
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.w500,
-            letterSpacing: 1,
-          ),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              'Soát vé - ',
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w500,
+                letterSpacing: 1,
+              ),
+            ),
+            Text(
+              DateFormat('dd/MM/yyyy').format(today),
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w500,
+                fontSize: 20,
+              ),
+            ),
+            SizedBox(width: 20,)
+          ],
         ),
       ),
       body: Column(
         children: [
+          SizedBox(height: 20,),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Row(
@@ -210,6 +188,7 @@ class _ListTripPageState extends State<ListTripPage> {
                 return Container(
                   width: double.infinity,
                   margin: const EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
                     border: Border.all(
                       color: Colors.grey[300]!,
@@ -304,9 +283,7 @@ class _ListTripPageState extends State<ListTripPage> {
                               Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Text(
-                                  trip.isChecked
-                                      ? 'Đã soát vé'
-                                      : 'Chưa soát vé',
+                                  trip.isChecked ? 'Quá hạn' : 'Chưa soát',
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 16,
@@ -326,7 +303,10 @@ class _ListTripPageState extends State<ListTripPage> {
                         children: [
                           TextButton(
                             onPressed: () {
-                              // Add your detail action here
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) {
+                                return TripDetailPage(trip: trip);
+                              }));
                             },
                             child: Container(
                               height: 40,
@@ -397,17 +377,4 @@ class _ListTripPageState extends State<ListTripPage> {
       ),
     );
   }
-}
-
-class Trip {
-  final String startLocation;
-  final String endLocation;
-  final DateTime time;
-  bool isChecked;
-
-  Trip(
-      {required this.endLocation,
-      required this.startLocation,
-      required this.time,
-      this.isChecked = false});
 }
