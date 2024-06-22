@@ -159,11 +159,21 @@ class _LoginPageState extends State<LoginPage> {
                             color: Colors.orange.shade900,
                           ),
                           child: Center(
-                            child: Text(
-                              "Đăng nhập",
-                              style: TextStyle(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  "Đăng nhập",
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                SizedBox(width: 10),
+                                Icon(
+                                  Icons.login,
                                   color: Colors.white,
-                                  fontWeight: FontWeight.bold),
+                                )
+                              ],
                             ),
                           ),
                         ),
@@ -187,10 +197,7 @@ class _LoginPageState extends State<LoginPage> {
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Icon(
-                                    Icons.g_mobiledata_rounded,
-                                    color: Colors.white,
-                                  ),
+                                  
                                   SizedBox(width: 10),
                                   Text(
                                     'Google',
@@ -198,6 +205,10 @@ class _LoginPageState extends State<LoginPage> {
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold,
                                     ),
+                                  ),
+                                  Icon(
+                                    Icons.g_mobiledata_rounded,
+                                    color: Colors.white,
                                   ),
                                 ],
                               ),
