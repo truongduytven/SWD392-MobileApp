@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:swd392/Home/homepage.dart';
-import 'package:swd392/Notification/notification.dart';
+import 'package:swd392/Profile/edit_profile.dart';
+import 'package:swd392/Profile/profile.dart';
 import 'package:swd392/Search/search_ticket.dart';
 
 class NavigationMenu extends StatefulWidget {
@@ -94,9 +95,9 @@ class _NavigationMenuState extends State<NavigationMenu> {
       case 1:
         return SearchTicketPage();
       case 2:
-        return NotificationPage();
+        return const Text('Thông báo');
       case 3:
-        return const Text('Tài khoản');
+        return ProfilePage();
       default:
         return const Text('Trang chủ');
     }
