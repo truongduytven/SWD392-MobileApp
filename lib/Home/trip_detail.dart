@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import '../Data/trip.dart';
+import '../models/trip_model.dart';
 
 class TripDetailPage extends StatefulWidget {
   final Trip trip;

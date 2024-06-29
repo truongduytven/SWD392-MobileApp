@@ -3,7 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:swd392/Data/trip_data.dart';
 import 'package:swd392/Home/list_ticket.dart';
 import 'package:swd392/Home/trip_detail.dart';
-import 'package:swd392/Data/trip.dart';
+import 'package:swd392/models/trip_model.dart';
 
 class ListTripPage extends StatefulWidget {
   const ListTripPage({super.key});
