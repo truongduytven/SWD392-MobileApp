@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:swd392/Data/trip_data.dart';
 import 'package:swd392/Home/trip_detail.dart';
-import '../Data/trip.dart';
+import '../models/trip_model.dart';
 
 class ListTripAllDayPage extends StatefulWidget {
   const ListTripAllDayPage({super.key});

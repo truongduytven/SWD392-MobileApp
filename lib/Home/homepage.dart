@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:swd392/Home/list_trip.dart';
 import 'package:swd392/Home/list_trip_all_day.dart';
+import 'package:swd392/Notification/notification.dart';
+import 'package:swd392/models/notification_model.dart';
+import 'package:swd392/Data/notification_data.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key}) : super(key: key);
@@ -12,6 +16,14 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
+    List<NotificationModel> unreadNotifications =
+        notifications.where((notif) => !notif.read).toList();
+
+    // Determine number of notifications to display (maximum 5)
+    final int maxNotificationsToShow = 5;
+    int notificationsCount = unreadNotifications.length > maxNotificationsToShow
+        ? maxNotificationsToShow
+        : unreadNotifications.length;
     return Scaffold(
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
@@ -172,7 +184,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         "Chức năng chính",
                         style: TextStyle(
                           fontSize: 20,
-                          color: Colors.orange.shade700,
+                          color: Colors.orange,
                           fontWeight: FontWeight.w600,
                           letterSpacing: 1,
                           wordSpacing: 2,
@@ -182,7 +194,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     Padding(
                       padding: EdgeInsets.only(left: 20, right: 20, bottom: 20),
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Column(
                             children: [
@@ -190,7 +202,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                 icon: Icon(Icons.qr_code_scanner, size: 28),
                                 onPressed: () {
                                   Navigator.push(context,
-                                    MaterialPageRoute(builder: (context) {
+                                      MaterialPageRoute(builder: (context) {
                                     return ListTripPage();
                                   }));
                                 },
@@ -206,14 +218,14 @@ class _MyHomePageState extends State<MyHomePage> {
                               ),
                             ],
                           ),
-                          SizedBox(width: 30),
+                          // SizedBox(width: 30),
                           Column(
                             children: [
                               IconButton(
                                 icon: Icon(Icons.directions_bus, size: 28),
                                 onPressed: () {
                                   Navigator.push(context,
-                                    MaterialPageRoute(builder: (context) {
+                                      MaterialPageRoute(builder: (context) {
                                     return ListTripAllDayPage();
                                   }));
                                 },
@@ -229,7 +241,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               ),
                             ],
                           ),
-                          SizedBox(width: 30),
+                          // SizedBox(width: 30),
                           Column(
                             children: [
                               IconButton(
@@ -261,7 +273,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                "Thông báo",
+                                "Thông báo mới",
                                 style: TextStyle(
                                   fontSize: 20,
                                   color: Colors.orange,
@@ -272,7 +284,12 @@ class _MyHomePageState extends State<MyHomePage> {
                               ),
                               TextButton(
                                 onPressed: () {
-                                  // Navigate to Thông báo
+                                  // Navigate to view all notifications
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              NotificationPage()));
                                 },
                                 child: Text(
                                   "Xem tất cả",
@@ -293,66 +310,52 @@ class _MyHomePageState extends State<MyHomePage> {
                           ListView.builder(
                             shrinkWrap: true,
                             physics: NeverScrollableScrollPhysics(),
-                            itemCount: 5, // Replace with your actual list size
+                            itemCount: notificationsCount,
                             itemBuilder: (context, index) {
-                              // Replace with your notification item widget
+                              final notification = unreadNotifications[index];
                               return Container(
-                                width: double.infinity,
-                                height: 100,
-                                margin: EdgeInsets.only(bottom: 10),
+                                padding: EdgeInsets.all(10),
+                                margin: EdgeInsets.symmetric(
+                                    vertical: 5),
                                 decoration: BoxDecoration(
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.grey.withOpacity(0.2),
-                                      spreadRadius: 5,
-                                      blurRadius: 7,
-                                      offset: Offset(0, 2),
-                                    ),
-                                  ],
-                                  color: Colors.white,
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(15)),
-                                ),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: <Widget>[
-                                    Padding(
-                                      padding: EdgeInsets.all(10),
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color:
-                                                  Colors.grey.withOpacity(0.2),
-                                              spreadRadius: 5,
-                                              blurRadius: 7,
-                                              offset: Offset(0, 2),
-                                            ),
-                                          ],
-                                        ),
-                                        child: ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          child: Image.asset(
-                                            'assets/bus.jpg',
-                                            fit: BoxFit.cover,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    Container(
-                                      width: 200,
-                                      child: Text(
-                                        "Tuyến Sài Gòn- Hà Nội: thay đổi lịch trình",
+                                    color: notification.read
+                                        ? Colors.white
+                                        : Colors.blue[50],
+                                    borderRadius: BorderRadius.circular(10),
+                                    border: Border.all(
+                                      color: notification.read
+                                          ? Colors.grey
+                                          : Colors.blue,
+                                      width: 1,
+                                    )),
+                                child: ListTile(
+                                  title: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        notification.title,
                                         style: TextStyle(
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.w600,
-                                          letterSpacing: 1,
-                                          wordSpacing: 2,
+                                          fontWeight: notification.read
+                                              ? FontWeight.normal
+                                              : FontWeight.bold,
                                         ),
                                       ),
-                                    )
-                                  ],
+                                      SizedBox(height: 5),
+                                      Text(
+                                        notification.receivedTime != null
+                                            ? "${DateFormat('HH:mm dd/MM/yyyy').format(notification.receivedTime!)}"
+                                            : "Unknown time",
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          color: Colors.grey,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  // trailing: notification.read
+                                  //     ? null
+                                  //     : Icon(Icons.circle, color: Colors.blue, size: 15,),
                                 ),
                               );
                             },

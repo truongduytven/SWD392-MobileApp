@@ -1,5 +1,5 @@
 
-import 'package:swd392/Data/trip.dart';
+import 'package:swd392/models/trip_model.dart';
 
 DateTime now = DateTime.now();
 DateTime today = DateTime(now.year, now.month, now.day);

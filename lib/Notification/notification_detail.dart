@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'notification_model.dart'; // Assuming you have a NotificationModel
+import '../models/notification_model.dart';
 
 class NotificationDetailPage extends StatelessWidget {
   final NotificationModel notification;
@@ -47,7 +47,7 @@ class NotificationDetailPage extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 25,
                     fontWeight: FontWeight.bold,
-                    color: Colors.orange.shade600
+                    color: Colors.orange.shade600,
                   ),
                   textAlign: TextAlign.center,
                 ),
@@ -66,7 +66,7 @@ class NotificationDetailPage extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 20,
                   ),
-                  textAlign: TextAlign.center, 
+                  textAlign: TextAlign.center,
                 ),
               ],
             ),

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:swd392/Home/homepage.dart';
 import 'package:swd392/Notification/notification.dart';
-import 'package:swd392/Profile/edit_profile.dart';
 import 'package:swd392/Profile/profile.dart';
 import 'package:swd392/Search/search_ticket.dart';
 
