@@ -5,6 +5,7 @@ import 'package:swd392/Home/list_trip_all_day.dart';
 import 'package:swd392/Notification/notification.dart';
 import 'package:swd392/models/notification_model.dart';
 import 'package:swd392/Data/notification_data.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key}) : super(key: key);
@@ -14,6 +15,21 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  String userName = '';
+
+  @override
+  void initState() {
+    super.initState();
+    // Fetch user information from SharedPreferences
+    fetchUserInfo();
+  }
+
+  void fetchUserInfo() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      userName = prefs.getString('userName') ?? '';
+    });
+  }
   @override
   Widget build(BuildContext context) {
     List<NotificationModel> unreadNotifications =
@@ -77,7 +93,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                 ),
                               ),
                               Text(
-                                "Nguyễn Thị Mộng Tiên",
+                                userName,
                                 style: TextStyle(
                                   fontSize: 20,
                                   color: Colors.white,

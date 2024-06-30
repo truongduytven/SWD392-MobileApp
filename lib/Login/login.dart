@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:swd392/navigation_menu.dart';
+import 'package:http/http.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -9,25 +12,95 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  TextEditingController phoneNumberController = TextEditingController();
+  TextEditingController EmailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   String? errorText;
 
-  void login() {
-    String phoneNumber = phoneNumberController.text;
+  void login() async {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return Center(child: CircularProgressIndicator());
+        });
+
+    String emailText = EmailController.text;
     String password = passwordController.text;
 
-    // Check if the phone number and password match the expected values
-    if (phoneNumber == '123' && password == '123') {
-      // Navigate to the homepage if login is successful
-      Navigator.push(context, MaterialPageRoute(builder: (context) {
-        return NavigationMenu();
-      }));
-    } else {
-      // Show error message if login fails
+    try {
+      if (emailText.isEmpty) {
+        throw ('Email không được để trống');
+      }
+
+      if (password.isEmpty) {
+        throw ('Mật khẩu không được để trống');
+      }
+
+      Response response = await post(
+        Uri.parse(
+            'https://ticket-booking-swd392-project.azurewebsites.net/auth-management/managed-auths/sign-ins'),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          'email': emailText,
+          'password': password,
+        }),
+      ).timeout(Duration(seconds: 10));
+
+      if (response.statusCode == 200) {
+        var data = jsonDecode(response.body);
+        String accessToken = data['accessToken'];
+
+        // Verify the token
+        Response verifyResponse = await get(
+          Uri.parse(
+              'https://ticket-booking-swd392-project.azurewebsites.net/auth-management/managed-auths/token-verification'),
+          headers: {
+            'Authorization': 'Bearer $accessToken',
+          },
+        );
+        if (verifyResponse.statusCode == 200) {
+          var verifyData = jsonDecode(verifyResponse.body);
+          if (verifyData['success']) {
+            // Save user data to local storage
+            SharedPreferences prefs = await SharedPreferences.getInstance();
+            prefs.setString('userID', verifyData['result']['user']['userID']);
+            prefs.setString('token', accessToken);
+            prefs.setString(
+                'userName', verifyData['result']['user']['userName']);
+            prefs.setString('email', verifyData['result']['user']['email']);
+            prefs.setString('accessToken', accessToken);
+
+            // Navigate to the homepage
+            Navigator.of(context).pop(); // Close the loading dialog
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              Navigator.push(context, MaterialPageRoute(builder: (context) {
+                return NavigationMenu();
+              }));
+            });
+            return;
+          } else {
+            setState(() {
+              errorText = 'Token verification failed';
+            });
+          }
+        } else {
+          setState(() {
+            errorText = 'Token verification failed';
+          });
+        }
+      } else {
+        setState(() {
+          errorText = response.statusCode.toString();
+        });
+      }
+    } catch (e) {
       setState(() {
-        errorText = 'Số điện thoại hoặc mật khẩu không đúng';
+        errorText = 'Error: $e';
       });
+    } finally {
+      // Dismiss loading indicator regardless of success or failure
+      Navigator.of(context).pop();
     }
   }
 
@@ -115,9 +188,9 @@ class _LoginPageState extends State<LoginPage> {
                                   ),
                                 ),
                                 child: TextField(
-                                  controller: phoneNumberController,
+                                  controller: EmailController,
                                   decoration: InputDecoration(
-                                    hintText: 'Email hoặc số điện thoại',
+                                    hintText: 'Email',
                                     hintStyle: TextStyle(color: Colors.grey),
                                     border: InputBorder.none,
                                   ),

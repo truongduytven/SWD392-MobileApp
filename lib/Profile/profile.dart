@@ -1,8 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
-// ignore: unused_import
-import 'package:googleapis/docs/v1.dart' as googleapis;
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
 import 'package:swd392/Login/login.dart';
-import 'package:swd392/Profile/edit_profile.dart'; // Alias the googleapis import
+import 'package:swd392/Profile/edit_profile.dart';
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -11,6 +13,65 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   bool isObscurePassword = true;
+  String token = '';
+  String fullName = '';
+  String phoneNumber = '';
+  String address = '';
+  String email = '';
+  String userID = '';
+
+  @override
+  void initState() {
+    super.initState();
+    fetchUserInfo();
+  }
+
+  void fetchUserInfo() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    token = prefs.getString('token') ?? '';
+    if (token.isNotEmpty) {
+      setState(() {
+        userID = prefs.getString('userID') ?? '';
+        token = prefs.getString('token') ?? '';
+      });
+      getUserData();
+    }
+  }
+
+  void getUserData() async {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return Center(
+            child: CircularProgressIndicator(
+              color: Colors.orange.shade600,
+            )
+          );
+        });
+    final response = await http.get(
+      Uri.parse(
+          'https://ticket-booking-swd392-project.azurewebsites.net/user-management/managed-users/$userID/details'),
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
+    );
+    print(userID);
+    print(response.statusCode);
+    if (response.statusCode == 200) {
+      var data = jsonDecode(response.body);
+      // Parse the user data from the response body
+      setState(() {
+        fullName = data['fullName']; // Example value
+        phoneNumber = data['phoneNumber']; // Example value
+        address = data['address']; // Example value
+        email = data['email']; // Example value
+        Navigator.of(context).pop();
+      });
+    } else {
+      // Handle the error
+      print('Failed to load user data');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -66,11 +127,10 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
               ),
               SizedBox(height: 30),
-              buildTextField("Tên đầy đủ", "Nguyễn Thị Mộng Tiên", false, true),
-              buildTextField("Số điện thoại", "0123456789", false, true),
-              buildTextField("Địa chỉ", "Tỉnh Giồng Trôm", false, true),
-              buildTextField("Email", "tienMasterFE@gmail.com", false, true),
-              // buildTextField("Password", "1234", true, true),
+              buildTextField("Tên đầy đủ", fullName, false, true),
+              buildTextField("Số điện thoại", phoneNumber, false, true),
+              buildTextField("Địa chỉ", address, false, true),
+              buildTextField("Email", email, false, true),
               SizedBox(
                 height: 20,
               ),
@@ -78,7 +138,6 @@ class _ProfilePageState extends State<ProfilePage> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   SizedBox(
-                    // width: MediaQuery.of(context).size.width / 3,
                     child: ElevatedButton(
                       onPressed: () {
                         Navigator.push(context,
@@ -116,16 +175,15 @@ class _ProfilePageState extends State<ProfilePage> {
                     width: 10,
                   ),
                   SizedBox(
-                    // width: MediaQuery.of(context).size.width / 3,
                     child: ElevatedButton(
                       onPressed: () {
                         Navigator.push(context,
                             MaterialPageRoute(builder: (context) {
                           return EditProfilePage(
-                            fullName: "Nguyễn Thị Mộng Tiên",
-                            phoneNumber: "0123456789",
-                            address: "Tỉnh Giồng Trôm",
-                            email: "tienMasterFE@gmail.com",
+                            fullName: fullName,
+                            phoneNumber: phoneNumber,
+                            address: address,
+                            email: email,
                             avatarUrl: "assets/mytien.jpg",
                           );
                         }));

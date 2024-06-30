@@ -114,6 +114,28 @@ class ResultSearch extends StatelessWidget {
                     height: 20,
                   ),
                   Text(
+                    "Giờ đi: 7:00 AM",
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.w500,
+                      letterSpacing: 1,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Text(
+                    "Ngày đi: 15/08/2024",
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.w500,
+                      letterSpacing: 1,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Text(
                     "Mã ghế: A01",
                     style: TextStyle(
                       color: Colors.black,
@@ -126,6 +148,17 @@ class ResultSearch extends StatelessWidget {
                   ),
                   Text(
                     "Tuyến: Bến Tre - TP Hồ Chí Minh",
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.w500,
+                      letterSpacing: 1,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Text(
+                    "Trạng thái: Chưa soát",
                     style: TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.w500,
