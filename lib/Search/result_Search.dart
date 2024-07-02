@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:swd392/Data/ticket_detail.dart';
 
 class ResultSearch extends StatelessWidget {
   final String code;
   final Function() closeScreen;
+  final TicketDetail ticketDetail;
 
   const ResultSearch(
-      {super.key, required this.code, required this.closeScreen});
+      {super.key, required this.code, required this.ticketDetail, required this.closeScreen});
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +59,7 @@ class ResultSearch extends StatelessWidget {
                       ),
                       Container(
                         child: QrImageView(
-                          data: code,
+                          data: ticketDetail.qrCodeImage,
                           size: 150,
                           version: QrVersions.auto,
                         ),
@@ -92,7 +94,7 @@ class ResultSearch extends StatelessWidget {
                     height: 20,
                   ),
                   Text(
-                    "Tên: Nguyễn Ngọc Mỹ Tiên",
+                    "Tên: " + ticketDetail.name,
                     style: TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.w500,
@@ -103,7 +105,7 @@ class ResultSearch extends StatelessWidget {
                     height: 20,
                   ),
                   Text(
-                    "Số điện thoại: 0987654321",
+                    "Số điện thoại: " + ticketDetail.phoneNumber,
                     style: TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.w500,
@@ -114,7 +116,7 @@ class ResultSearch extends StatelessWidget {
                     height: 20,
                   ),
                   Text(
-                    "Giờ đi: 7:00 AM",
+                    "Giờ đi: " + ticketDetail.startTime,
                     style: TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.w500,
@@ -125,7 +127,7 @@ class ResultSearch extends StatelessWidget {
                     height: 20,
                   ),
                   Text(
-                    "Ngày đi: 15/08/2024",
+                    "Ngày đi: " + ticketDetail.startDay,
                     style: TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.w500,
@@ -136,7 +138,7 @@ class ResultSearch extends StatelessWidget {
                     height: 20,
                   ),
                   Text(
-                    "Mã ghế: A01",
+                    "Mã ghế: " + ticketDetail.seatCode,
                     style: TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.w500,
@@ -147,7 +149,7 @@ class ResultSearch extends StatelessWidget {
                     height: 20,
                   ),
                   Text(
-                    "Tuyến: Bến Tre - TP Hồ Chí Minh",
+                    "Tuyến: " + ticketDetail.route,
                     style: TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.w500,
@@ -158,7 +160,7 @@ class ResultSearch extends StatelessWidget {
                     height: 20,
                   ),
                   Text(
-                    "Trạng thái: Chưa soát",
+                    "Trạng thái: " + ticketDetail.status,
                     style: TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.w500,
@@ -183,8 +185,9 @@ class ResultSearch extends StatelessWidget {
                   ListView.builder(
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
-                    itemCount: 5, // Replace with your actual list size
+                    itemCount: ticketDetail.services.length, // Replace with your actual list size
                     itemBuilder: (context, index) {
+                      var service = ticketDetail.services[index];
                       // Replace with your notification item widget
                       return Container(
                         width: double.infinity,
@@ -234,7 +237,7 @@ class ResultSearch extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    "Tên dịch vụ: Mỹ Tiên",
+                                    "Tên dịch vụ: ${service.serviceName}",
                                     style: TextStyle(
                                       fontSize: 13,
                                       fontWeight: FontWeight.w600,
@@ -243,7 +246,7 @@ class ResultSearch extends StatelessWidget {
                                     ),
                                   ),
                                   Text(
-                                    "Số lượng: 1",
+                                    "Số lượng: ${service.quantity}",
                                     style: TextStyle(
                                       fontSize: 13,
                                       fontWeight: FontWeight.w600,
@@ -252,7 +255,7 @@ class ResultSearch extends StatelessWidget {
                                     ),
                                   ),
                                   Text(
-                                    "Trạm: Bến Tre",
+                                    "Trạm: ${service.station}",
                                     style: TextStyle(
                                       fontSize: 13,
                                       fontWeight: FontWeight.w600,
@@ -261,7 +264,7 @@ class ResultSearch extends StatelessWidget {
                                     ),
                                   ),
                                   Text(
-                                    "Tổng tiền: 100.000đ",
+                                    "Tổng tiền: ${service.totalPrice}đ",
                                     style: TextStyle(
                                       fontSize: 13,
                                       fontWeight: FontWeight.w600,
