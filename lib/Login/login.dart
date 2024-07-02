@@ -49,7 +49,7 @@ class _LoginPageState extends State<LoginPage> {
 
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
-        String accessToken = data['accessToken'];
+        String accessToken = data['AccessToken'];
 
         // Verify the token
         Response verifyResponse = await get(
@@ -69,7 +69,7 @@ class _LoginPageState extends State<LoginPage> {
             prefs.setString(
                 'userName', verifyData['result']['user']['userName']);
             prefs.setString('email', verifyData['result']['user']['email']);
-            prefs.setString('accessToken', accessToken);
+            // prefs.setString('accessToken', accessToken);
 
             // Navigate to the homepage
             Navigator.of(context).pop(); // Close the loading dialog

@@ -61,10 +61,10 @@ class _ProfilePageState extends State<ProfilePage> {
       var data = jsonDecode(response.body);
       // Parse the user data from the response body
       setState(() {
-        fullName = data['fullName']; // Example value
-        phoneNumber = data['phoneNumber']; // Example value
-        address = data['address']; // Example value
-        email = data['email']; // Example value
+        fullName = data['FullName']; // Example value
+        phoneNumber = data['PhoneNumber']; // Example value
+        address = data['Address']; // Example value
+        email = data['Email']; // Example value
         Navigator.of(context).pop();
       });
     } else {
