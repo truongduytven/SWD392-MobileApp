@@ -49,6 +49,8 @@ dependencies:
   googleapis:
   http: ^1.2.1
   shared_preferences: ^2.2.3
+  firebase_messaging: ^15.0.2
+  firebase_core: ^3.1.1
 
 dev_dependencies:
   provider: ^6.1.2

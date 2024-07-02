@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:swd392/get_start.dart';
@@ -12,9 +13,20 @@ class SplashPage extends StatefulWidget {
 
 class _SplashPageState extends State<SplashPage>
     with SingleTickerProviderStateMixin {
+  String? _token;
+    // Get the device token
+    
+    
   @override
   void initState() {
     super.initState();
+
+    FirebaseMessaging.instance.getToken().then((token) {
+      setState(() {
+        _token = token;
+        print('Device token: $_token');
+      });
+    });
 
     // Set the app to immersive mode
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
