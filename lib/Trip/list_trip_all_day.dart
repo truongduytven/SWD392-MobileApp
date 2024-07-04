@@ -25,7 +25,6 @@ class _ListTripAllDayPageState extends State<ListTripAllDayPage> {
   void initState() {
     super.initState();
     fetchUserInfo();
-    fetchTrips();
   }
 
   void fetchUserInfo() async {
@@ -37,9 +36,15 @@ class _ListTripAllDayPageState extends State<ListTripAllDayPage> {
         token = prefs.getString('token') ?? '';
       });
     }
+    fetchTrips();
   }
   // Function to fetch trips from the API
   Future<void> fetchTrips() async {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return Center(child: CircularProgressIndicator());
+        });
     final String date = DateFormat('yyyy-MM-dd').format(selectedDate);
     final String apiUrl = 'https://ticket-booking-swd392-project.azurewebsites.net/trip-management/managed-trips/staff/$userID/start-time/$date'; // Replace with your actual API endpoint
 
@@ -49,14 +54,16 @@ class _ListTripAllDayPageState extends State<ListTripAllDayPage> {
         'Authorization': 'Bearer $token',
       },
     );
-
+    
     if (response.statusCode == 200) {
       final List<dynamic> responseData = json.decode(response.body);
+      Navigator.of(context).pop();
       setState(() {
         trips = responseData.map((data) => Trip.fromJson(data)).toList();
         isLoading = false;
       });
     } else {
+      Navigator.of(context).pop();
       throw Exception('Failed to load trips');
     }
   }
@@ -78,10 +85,7 @@ class _ListTripAllDayPageState extends State<ListTripAllDayPage> {
   }
 
   Future<void> fetchTripsData() async {// Replace with actual user ID
-    List<Trip> fetchedTrips = await fetchTrips() as List<Trip>;
-    setState(() {
-      trips = fetchedTrips;
-    });
+    await fetchTrips();
   }
 
   @override
@@ -221,7 +225,7 @@ class _ListTripAllDayPageState extends State<ListTripAllDayPage> {
                                                     style: const TextStyle(
                                                       fontWeight:
                                                           FontWeight.bold,
-                                                      fontSize: 20,
+                                                      fontSize: 15,
                                                     ),
                                                   ),
                                                 ],
@@ -243,7 +247,7 @@ class _ListTripAllDayPageState extends State<ListTripAllDayPage> {
                                                     style: const TextStyle(
                                                       fontWeight:
                                                           FontWeight.bold,
-                                                      fontSize: 20,
+                                                      fontSize: 15,
                                                     ),
                                                   ),
                                                 ],

@@ -210,7 +210,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     Padding(
                       padding: EdgeInsets.only(left: 20, right: 20, bottom: 20),
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           Column(
                             children: [
@@ -258,25 +258,25 @@ class _MyHomePageState extends State<MyHomePage> {
                             ],
                           ),
                           // SizedBox(width: 30),
-                          Column(
-                            children: [
-                              IconButton(
-                                icon: Icon(Icons.schedule, size: 28),
-                                onPressed: () {
-                                  // Navigate to Lịch trình
-                                },
-                              ),
-                              Text(
-                                "Lịch trình",
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w400,
-                                  letterSpacing: 1,
-                                  wordSpacing: 2,
-                                ),
-                              ),
-                            ],
-                          ),
+                          // Column(
+                          //   children: [
+                          //     IconButton(
+                          //       icon: Icon(Icons.schedule, size: 28),
+                          //       onPressed: () {
+                          //         // Navigate to Lịch trình
+                          //       },
+                          //     ),
+                          //     Text(
+                          //       "Lịch trình",
+                          //       style: TextStyle(
+                          //         fontSize: 18,
+                          //         fontWeight: FontWeight.w400,
+                          //         letterSpacing: 1,
+                          //         wordSpacing: 2,
+                          //       ),
+                          //     ),
+                          //   ],
+                          // ),
                         ],
                       ),
                     ),
