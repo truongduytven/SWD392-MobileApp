@@ -55,8 +55,6 @@ class _ProfilePageState extends State<ProfilePage> {
         'Authorization': 'Bearer $token',
       },
     );
-    print(userID);
-    print(response.statusCode);
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body);
       // Parse the user data from the response body

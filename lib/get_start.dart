@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:swd392/Login/login.dart';
 // import 'package:swd392/navigation_menu.dart';
 
@@ -15,16 +16,46 @@ class GetStartedPage extends StatelessWidget {
             child: Stack(
               children: [
                 Container(
+                  padding: EdgeInsets.all(40),
                   width: MediaQuery.of(context).size.width,
                   height: MediaQuery.of(context).size.height / 1.6,
                   decoration: BoxDecoration(
                       color: Colors.orange,
                       borderRadius:
-                          BorderRadius.only(bottomRight: Radius.circular(70))),
-                  child: Center(
-                    child: Image.asset("assets/getStarted.png", scale: 0.8),
+                          BorderRadius.only(
+                            bottomRight: Radius.circular(70),
+                          )),
+                  // child: Center(
+                    // child: ClipRRect(
+                    //   borderRadius: BorderRadius.circular(20),
+                    //   child: Container(
+                    //     padding: EdgeInsets.all(20),
+                    //     decoration: BoxDecoration(
+                    //       // color: Colors.white,
+                    //       borderRadius: BorderRadius.circular(20),
+                    //     ),
+                    //     child: Lottie.network(
+                    //       "https://lottie.host/2110e1bd-10b0-4ab5-a0de-a138acf6e65e/40YSCww07S.json",
+                    //       height: 300,
+                    //       // fit: BoxFit.fill,  
+                    //     ),
+                    //   ),
+                    // ),
+                    child: Container(
+                      padding: EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(70),
+                          bottomRight: Radius.circular(70),
+                          topRight: Radius.circular(20),
+                          bottomLeft: Radius.circular(20),
+                        ),
+                      ),
+                      child: Lottie.asset("assets/BusAnimation.json", height: 300),
+                    ), 
                   ),
-                ),
+                // ),
                 Align(
                   alignment: Alignment.bottomCenter,
                   child: Container(
@@ -32,8 +63,7 @@ class GetStartedPage extends StatelessWidget {
                       height: MediaQuery.of(context).size.height / 2.666,
                       decoration: BoxDecoration(
                         color: Colors.orange,
-                      )
-                      ),
+                      )),
                 ),
                 Align(
                   alignment: Alignment.bottomCenter,
@@ -70,7 +100,7 @@ class GetStartedPage extends StatelessWidget {
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal: 40),
                           child: Text(
-                            "Học tập cho tốt đi bạn Minh Thương, bạn Mỹ Tiên. Sau này hai bạn giàu hai bạn phải cưu mang tui",
+                            "Ứng dụng giúp bạn dễ dàng tìm kiếm thông tin vé, mua vé, mua dịch vụ đi kèm và theo dõi lịch trình của mình.",
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               fontSize: 17,
@@ -90,7 +120,8 @@ class GetStartedPage extends StatelessWidget {
                               }));
                             },
                             child: Container(
-                              padding: EdgeInsets.symmetric(vertical: 15, horizontal: 80),
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 15, horizontal: 80),
                               child: Text(
                                 "Bắt đầu ngay",
                                 style: TextStyle(
