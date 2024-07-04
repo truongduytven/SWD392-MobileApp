@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:swd392/Home/list_trip.dart';
-import 'package:swd392/Home/list_trip_all_day.dart';
+import 'package:swd392/Trip/list_trip.dart';
+import 'package:swd392/Trip/list_trip_all_day.dart';
 import 'package:swd392/Notification/notification.dart';
 import 'package:swd392/models/notification_model.dart';
 import 'package:swd392/Data/notification_data.dart';

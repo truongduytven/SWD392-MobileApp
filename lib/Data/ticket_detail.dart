@@ -7,6 +7,7 @@ class TicketDetail {
   final String startDay;
   final String seatCode;
   final String route;
+  final String tripID;
   final List<Service> services;
 
   TicketDetail({
@@ -18,6 +19,7 @@ class TicketDetail {
     required this.startDay,
     required this.seatCode,
     required this.route,
+    required this.tripID,
     required this.services,
   });
 
@@ -34,6 +36,7 @@ class TicketDetail {
       startDay: json['StartDay'],
       seatCode: json['SeatCode'],
       route: json['Route'],
+      tripID: json['TripID'],
       services: serviceList,
     );
   }

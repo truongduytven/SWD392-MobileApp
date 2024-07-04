@@ -61,15 +61,14 @@ class _LoginPageState extends State<LoginPage> {
         );
         if (verifyResponse.statusCode == 200) {
           var verifyData = jsonDecode(verifyResponse.body);
-          if (verifyData['success']) {
+          if (verifyData['Success'] && verifyData['Result']['RoleName'] == 'Staff') {
             // Save user data to local storage
             SharedPreferences prefs = await SharedPreferences.getInstance();
-            prefs.setString('userID', verifyData['result']['user']['userID']);
+            prefs.setString('userID', verifyData['Result']['User']['UserID']);
             prefs.setString('token', accessToken);
             prefs.setString(
-                'userName', verifyData['result']['user']['userName']);
-            prefs.setString('email', verifyData['result']['user']['email']);
-            // prefs.setString('accessToken', accessToken);
+                'userName', verifyData['Result']['User']['UserName']);
+            prefs.setString('email', verifyData['Result']['User']['Email']);
 
             // Navigate to the homepage
             Navigator.of(context).pop(); // Close the loading dialog
@@ -81,7 +80,7 @@ class _LoginPageState extends State<LoginPage> {
             return;
           } else {
             setState(() {
-              errorText = 'Token verification failed';
+              errorText = 'You are not authorized to access this app';
             });
           }
         } else {
@@ -91,7 +90,7 @@ class _LoginPageState extends State<LoginPage> {
         }
       } else {
         setState(() {
-          errorText = response.statusCode.toString();
+          errorText = jsonDecode(response.body)['Message'];
         });
       }
     } catch (e) {
