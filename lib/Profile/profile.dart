@@ -119,7 +119,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           shape: BoxShape.circle,
                           image: DecorationImage(
                               fit: BoxFit.cover,
-                              image: AssetImage('assets/mytien.jpg'))),
+                              image: AssetImage('assets/avatar.jpg'))),
                     ),
                   ],
                 ),
