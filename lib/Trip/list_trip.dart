@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:swd392/Trip/list_ticket.dart';
+import 'package:swd392/Trip/scan_ticket.dart';
 import 'package:swd392/Trip/trip_detail.dart';
 import 'package:swd392/models/trip_model.dart';
 import 'package:http/http.dart' as http;
@@ -417,7 +417,7 @@ class _ListTripPageState extends State<ListTripPage> {
                                     onPressed: () {
                                       Navigator.push(context,
                                           MaterialPageRoute(builder: (context) {
-                                        return ListTicketPage(
+                                        return ScanTicketPage(
                                           tripID: trip.tripID,
                                         );
                                       }));

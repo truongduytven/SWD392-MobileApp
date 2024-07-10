@@ -108,9 +108,7 @@ class _ResultSearchState extends State<ResultSearch> {
           fontSize: 16.0,
           );
           Future.delayed(Duration(seconds: 1), () {
-            widget.closeScreen();
             Navigator.pop(context);
-            Navigator.pop(context, true); // This will go back to the previous screen
           });
         } else {
           Navigator.pop(context);

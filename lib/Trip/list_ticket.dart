@@ -24,7 +24,7 @@ class _ListTicketPageState extends State<ListTicketPage> {
   void initState() {
     super.initState();
     fetchUserInfo();
-    WidgetsBinding.instance?.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       _handleReturnedFromResultSearch();
     });
   }
@@ -167,7 +167,6 @@ class _ListTicketPageState extends State<ListTicketPage> {
                               MaterialPageRoute(builder: (context) {
                             return ScanTicketPage(
                               tripID: widget.tripID,
-                              seatCode: filteredTickets[index].title,
                             );
                           })).then((value) {
                             fetchTickets();
