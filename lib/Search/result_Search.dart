@@ -4,6 +4,7 @@ import 'package:qr_flutter/qr_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:swd392/Data/ticket_detail.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'dart:convert';
 
 class ResultSearch extends StatefulWidget {
   final bool isCheckTicket;
@@ -51,20 +52,23 @@ class _ResultSearchState extends State<ResultSearch> {
           content: Text("Bạn có chắc chắn muốn xác nhận soát vé?"),
           actions: <Widget>[
             TextButton(
-              child: Text("Huỷ", style: TextStyle(
-                color: Colors.orange
-              ),),
+              child: Text(
+                "Huỷ",
+                style: TextStyle(color: Colors.orange),
+              ),
               onPressed: () {
                 Navigator.of(context).pop(false);
               },
             ),
             TextButton(
               style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all<Color>(Colors.orange),
+                backgroundColor:
+                    MaterialStateProperty.all<Color>(Colors.orange),
               ),
-              child: Text("Xác nhận", style: TextStyle(
-                color: Colors.white
-              ),),
+              child: Text(
+                "Xác nhận",
+                style: TextStyle(color: Colors.white),
+              ),
               onPressed: () {
                 Navigator.of(context).pop(true);
               },
@@ -97,15 +101,16 @@ class _ResultSearchState extends State<ResultSearch> {
         print(response.body);
         if (response.statusCode == 200) {
           // Parse the response
+          await saveTicketDetails(widget.ticketDetail);
           Navigator.pop(context);
           Fluttertoast.showToast(
-          msg: "Soát vé thành công!!",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.TOP,
-          timeInSecForIosWeb: 1,
-          backgroundColor: Colors.green,
-          textColor: Colors.white,
-          fontSize: 16.0,
+            msg: "Soát vé thành công!!",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.TOP,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.green,
+            textColor: Colors.white,
+            fontSize: 16.0,
           );
           Future.delayed(Duration(seconds: 1), () {
             Navigator.pop(context);
@@ -129,6 +134,55 @@ class _ResultSearchState extends State<ResultSearch> {
         );
       }
     }
+  }
+
+  Future<void> saveTicketDetails(TicketDetail ticketDetail) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? saveServicesDataString = prefs.getString('SaveServicesData');
+    Map<String, dynamic> saveServicesData;
+
+    if (saveServicesDataString != null) {
+      saveServicesData = json.decode(saveServicesDataString);
+    } else {
+      saveServicesData = {};
+    }
+
+    String tripID = ticketDetail.tripID;
+    List<dynamic> tickets = saveServicesData[tripID]?['Tickets'] ?? [];
+
+    Map<String, dynamic> newTicket = {
+      'SeatCode': ticketDetail.seatCode,
+      'Name': ticketDetail.name,
+      'Services': ticketDetail.services.map((service) {
+        return {
+          'TicketDetailServiceID': service.ticketDetailServiceID,
+          'ServiceName': service.serviceName,
+          'Quantity': service.quantity,
+          'TotalPrice': service.totalPrice,
+          'StationID': service.stationID,
+          'HasCheck': service.hasCheck,
+          'ImageUrl': service.imageUrl,
+        };
+      }).toList()
+    };
+
+    tickets.add(newTicket);
+
+    saveServicesData[tripID] = {
+      'TripID': tripID,
+      'Tickets': tickets,
+    };
+
+    await prefs.setString('SaveServicesData', json.encode(saveServicesData));
+  }
+
+  Map<String, dynamic>? getSavedServicesData() {
+    SharedPreferences prefs = SharedPreferences.getInstance() as SharedPreferences;
+    String? saveServicesDataString = prefs.getString('SaveServicesData');
+    if (saveServicesDataString != null) {
+      return json.decode(saveServicesDataString);
+    }
+    return null;
   }
 
   @override
@@ -402,7 +456,8 @@ class _ResultSearchState extends State<ResultSearch> {
                       ListView.builder(
                         shrinkWrap: true,
                         physics: NeverScrollableScrollPhysics(),
-                        itemCount: widget.ticketDetail.services.length, // Replace with your actual list size
+                        itemCount: widget.ticketDetail.services
+                            .length, // Replace with your actual list size
                         itemBuilder: (context, index) {
                           var service = widget.ticketDetail.services[index];
                           // Replace with your notification item widget
@@ -420,7 +475,8 @@ class _ResultSearchState extends State<ResultSearch> {
                                 ),
                               ],
                               color: Colors.white,
-                              borderRadius: BorderRadius.all(Radius.circular(15)),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(15)),
                             ),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -428,30 +484,29 @@ class _ResultSearchState extends State<ResultSearch> {
                                 Padding(
                                   padding: EdgeInsets.all(10),
                                   child: Container(
-                                    decoration: BoxDecoration(
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.grey.withOpacity(0.2),
-                                          spreadRadius: 5,
-                                          blurRadius: 7,
-                                          offset: Offset(0, 2),
-                                        ),
-                                      ],
-                                    ),
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(10),
-                                      child: Image.asset(
-                                        'assets/mytien.jpg',
-                                        fit: BoxFit.cover,
+                                      decoration: BoxDecoration(
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.grey.withOpacity(0.2),
+                                            spreadRadius: 5,
+                                            blurRadius: 7,
+                                            offset: Offset(0, 2),
+                                          ),
+                                        ],
                                       ),
-                                    ),
-                                  ),
+                                      child: Image.network(
+                                        service.imageUrl,
+                                        height: 100,
+                                        width: 100,
+                                      )),
                                 ),
                                 Container(
                                   width: 200,
                                   child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         "${service.serviceName}",
