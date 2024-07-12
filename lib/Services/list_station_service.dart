@@ -4,10 +4,6 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
-// Assuming these are defined elsewhere in your codebase
-import 'package:swd392/Services/scan_service.dart';
-import 'package:swd392/models/service.dart';
-
 class SelectStationPage extends StatefulWidget {
   final String tripID;
   final String routeID;
@@ -29,6 +25,7 @@ class _SelectStationPageState extends State<SelectStationPage> {
   String? selectedStation;
   String token = '';
   List<dynamic> filteredTickets = [];
+  Map<String, bool> selectedServices = {};
 
   @override
   void initState() {
@@ -102,7 +99,6 @@ class _SelectStationPageState extends State<SelectStationPage> {
     setState(() {
       selectedStation = station;
     });
-    print(station);
     // Fetch local data based on selected station
     fetchLocalData(station);
   }
@@ -114,19 +110,20 @@ class _SelectStationPageState extends State<SelectStationPage> {
     String? saveServicesDataString = prefs.getString('SaveServicesData');
 
     if (saveServicesDataString != null) {
-      Map<String, dynamic> saveServicesData = json.decode(saveServicesDataString);
+      Map<String, dynamic> saveServicesData =
+          json.decode(saveServicesDataString);
 
       if (saveServicesData.containsKey(widget.tripID)) {
         List<dynamic> tickets = saveServicesData[widget.tripID]['Tickets'];
         setState(() {
           filteredTickets = tickets.where((ticket) {
-            return ticket['Services'].any((service) => service['StationID'] == stationID);
+            return ticket['Services'].any((service) =>
+                service['StationID'] == stationID && !service['HasCheck']);
           }).toList();
         });
-        print(saveServicesData);
         if (filteredTickets.isEmpty) {
           Fluttertoast.showToast(
-            msg: "Không tìm thấy vé nào cho trạm đã chọn!",
+            msg: "Không tìm thấy dịch vụ nào cho trạm đã chọn!",
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.TOP,
             timeInSecForIosWeb: 1,
@@ -139,8 +136,138 @@ class _SelectStationPageState extends State<SelectStationPage> {
     }
   }
 
+  void onCheckboxChanged(bool? value, String ticketDetailServiceID) {
+    setState(() {
+      selectedServices[ticketDetailServiceID] = value ?? false;
+    });
+  }
+
+  Future<void> updateServiceStatus() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? saveServicesDataString = prefs.getString('SaveServicesData');
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) {
+          return Center(child: CircularProgressIndicator());
+        },
+      );
+    if (saveServicesDataString != null) {
+      Map<String, dynamic> saveServicesData =
+          json.decode(saveServicesDataString);
+
+      List<String> postData = [];
+
+      for (var ticket in filteredTickets) {
+        for (var service in ticket['Services']) {
+          if (selectedServices[service['TicketDetailServiceID']] == true) {
+            postData.add(service['TicketDetailServiceID']);
+          }
+        }
+      }
+
+      try {
+        final response = await http.put(
+          Uri.parse(
+              'https://ticket-booking-swd392-project.azurewebsites.net/ticket-detail-management/managed-ticket-details/service-trackers'),
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $token',
+          },
+          body: json.encode(postData),
+        );
+
+        if (response.statusCode == 200) {
+
+          // Update local data and SharedPreferences after successful API call
+          for (var ticket in saveServicesData[widget.tripID]['Tickets']) {
+            ticket['Services'].forEach((service) {
+              if (selectedServices[service['TicketDetailServiceID']] == true) {
+                service['HasCheck'] = true;
+              }
+            });
+          }
+
+          prefs.setString('SaveServicesData', json.encode(saveServicesData));
+
+          // Refresh the local data
+          fetchLocalData(selectedStation);
+
+          // Clear selected services after update
+          setState(() {
+            selectedServices.clear();
+          });
+          Navigator.pop(context);
+          Fluttertoast.showToast(
+            msg: "Cập nhật trạng thái dịch vụ thành công!",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.TOP,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.green,
+            textColor: Colors.white,
+            fontSize: 16.0,
+          );
+        } else {
+          Navigator.pop(context);
+          Fluttertoast.showToast(
+            msg: "Lỗi khi cập nhật trạng thái",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.TOP,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            fontSize: 16.0,
+          );
+        }
+      } catch (error) {
+        Navigator.pop(context);
+        Fluttertoast.showToast(
+          msg: "Có lỗi xảy ra khi cập nhật trạng thái dịch vụ!",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.TOP,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
+      }
+    }
+  }
+
+  void showConfirmationDialog(int selectedCount) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Xác nhận"),
+          content: Text(
+              "Bạn có chắc chắn muốn xác nhận đã sử dụng $selectedCount dịch vụ không?"),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text("Hủy", style: TextStyle(color: Colors.orange)),
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.orange),
+              onPressed: () {
+                Navigator.of(context).pop();
+                updateServiceStatus();
+              },
+              child: Text("Xác nhận", style: TextStyle(color: Colors.white)),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    int selectedCount =
+        selectedServices.values.where((isChecked) => isChecked).length;
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.orange,
@@ -159,16 +286,19 @@ class _SelectStationPageState extends State<SelectStationPage> {
         children: [
           SizedBox(height: 16.0),
           DropdownButton<String>(
-            hint: Text('Chọn trạm'),
+            hint: Text('Chọn trạm', style: TextStyle(fontWeight: FontWeight.w900, fontSize: 18)),
+            dropdownColor: Colors.white,
             value: selectedStation,
+            alignment: Alignment.center,
             onChanged: onSelectStation,
             items: stations.map((station) {
               return DropdownMenuItem<String>(
                 value: station.stationID,
-                child: Text(station.name),
+                child: Text(station.name, style: TextStyle(fontWeight: FontWeight.w900, fontSize: 18)),
               );
             }).toList(),
           ),
+          SizedBox(height: 16.0),
           Expanded(
             child: selectedStation == null
                 ? Center(child: Text('Vui lòng chọn trạm trước'))
@@ -176,10 +306,57 @@ class _SelectStationPageState extends State<SelectStationPage> {
                     itemCount: filteredTickets.length,
                     itemBuilder: (context, index) {
                       var ticket = filteredTickets[index];
-                      return ListTile(
-                        title: Text(ticket['Name']),
-                        subtitle: Text('Seat: ${ticket['SeatCode']}'),
-                        trailing: Icon(Icons.check_circle, color: Colors.green),
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: ticket['Services'].map<Widget>((service) {
+                          if (service['StationID'] != selectedStation || service['HasCheck'])
+                            return Container();
+                          return Card(
+                            color: Colors.white,
+                            margin: EdgeInsets.symmetric(
+                                vertical: 8.0, horizontal: 16.0),
+                            child: Padding(
+                              padding: EdgeInsets.all(16.0),
+                              child: Row(
+                                children: [
+                                  Image.network(
+                                    service['ImageUrl'],
+                                    height: 100,
+                                    width: 100,
+                                    fit: BoxFit.cover,
+                                  ),
+                                  SizedBox(width: 16.0),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text('Khách hàng: ${ticket['Name']}',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 16)),
+                                        Text('Mã ghế: ${ticket['SeatCode']}'),
+                                        Text(
+                                            'Tên dịch vụ: ${service['ServiceName']}'),
+                                        Text(
+                                            'Số lượng: ${service['Quantity']}'),
+                                      ],
+                                    ),
+                                  ),
+                                  Checkbox(
+                                    activeColor: Colors.orange,
+                                    value: selectedServices[
+                                            service['TicketDetailServiceID']] ??
+                                        false,
+                                    onChanged: (value) => onCheckboxChanged(
+                                        value,
+                                        service['TicketDetailServiceID']),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        }).toList(),
                       );
                     },
                   ),
@@ -191,25 +368,23 @@ class _SelectStationPageState extends State<SelectStationPage> {
                 padding: const EdgeInsets.all(20.0),
                 child: SizedBox(
                   width: MediaQuery.of(context).size.width * 2 / 3,
-                  child: Container(
-                    child: ElevatedButton(
-                      onPressed: () {
-                        // Navigate to QR Scan Page
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.orange,
-                        padding: EdgeInsets.symmetric(vertical: 15),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
+                  child: ElevatedButton(
+                    onPressed: selectedCount > 0
+                        ? () => showConfirmationDialog(selectedCount)
+                        : null,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.orange,
+                      padding: EdgeInsets.symmetric(vertical: 15),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
                       ),
-                      child: Text(
-                        "Quét mã QR",
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white,
-                        ),
+                    ),
+                    child: Text(
+                      "Xác nhận $selectedCount dịch vụ",
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white,
                       ),
                     ),
                   ),

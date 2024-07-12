@@ -463,7 +463,7 @@ class _ResultSearchState extends State<ResultSearch> {
                           // Replace with your notification item widget
                           return Container(
                             width: double.infinity,
-                            height: 120,
+                            height: 150,
                             margin: EdgeInsets.only(bottom: 10),
                             decoration: BoxDecoration(
                               boxShadow: [
@@ -511,9 +511,8 @@ class _ResultSearchState extends State<ResultSearch> {
                                       Text(
                                         "${service.serviceName}",
                                         style: TextStyle(
-                                          fontSize: 15,
-                                          color: Colors.green.shade700,
-                                          fontWeight: FontWeight.w700,
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w900,
                                           letterSpacing: 1,
                                           wordSpacing: 2,
                                         ),
@@ -545,6 +544,18 @@ class _ResultSearchState extends State<ResultSearch> {
                                           wordSpacing: 2,
                                         ),
                                       ),
+                                      Text(
+                                        service.hasCheck ? "Đã sử dụng" : "Chưa sử dụng",
+                                        style: TextStyle(
+                                          fontSize: 13,
+                                          color: service.hasCheck
+                                              ? Colors.green
+                                              : Colors.red,
+                                          fontWeight: FontWeight.w500,
+                                          letterSpacing: 1,
+                                          wordSpacing: 2,
+                                        ),
+                                      ),
                                     ],
                                   ),
                                 )
@@ -553,6 +564,7 @@ class _ResultSearchState extends State<ResultSearch> {
                           );
                         },
                       ),
+                      SizedBox(height: 50,)
                     ],
                   ),
                 )
