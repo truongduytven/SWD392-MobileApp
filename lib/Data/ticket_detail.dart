@@ -47,12 +47,20 @@ class Service {
   final int quantity;
   final String station;
   final int totalPrice;
+  final String imageUrl;
+  final bool hasCheck;
+  final String ticketDetailServiceID;
+  final String stationID;
 
   Service({
     required this.serviceName,
     required this.quantity,
     required this.station,
     required this.totalPrice,
+    required this.imageUrl,
+    required this.hasCheck,
+    required this.ticketDetailServiceID,
+    required this.stationID,
   });
 
   factory Service.fromJson(Map<String, dynamic> json) {
@@ -61,6 +69,10 @@ class Service {
       quantity: json['Quantity'],
       station: json['Station'],
       totalPrice: json['TotalPrice'],
+      imageUrl: json['ImageUrl'],
+      hasCheck: json['HasCheck'],
+      ticketDetailServiceID: json['TicketDetailServiceID'],
+      stationID: json['StationID'],
     );
   }
 }

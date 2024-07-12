@@ -3,6 +3,7 @@ class Trip {
   final String routeID;
   final String templateID;
   final String companyName;
+  final String companyID;
   final String imageUrl;
   final double averageRating;
   final int quantityRating;
@@ -14,13 +15,14 @@ class Trip {
   final DateTime endTime;
   final int emptySeat;
   final int price;
-  bool isChecked;
+  final bool isChecked;
 
   Trip({
     required this.tripID,
     required this.routeID,
     required this.templateID,
     required this.companyName,
+    required this.companyID,
     required this.imageUrl,
     required this.averageRating,
     required this.quantityRating,
@@ -32,7 +34,7 @@ class Trip {
     required this.endTime,
     required this.emptySeat,
     required this.price,
-    this.isChecked = false,
+    required this.isChecked,
   });
 
   factory Trip.fromJson(Map<String, dynamic> json) {
@@ -55,11 +57,14 @@ class Trip {
       int.parse(json['EndTime'].split(":")[1]),
     );
 
+    bool isChecked = DateTime.now().isAfter(startTime);
+
     return Trip(
       tripID: json['TripID'],
       routeID: json['RouteID'],
       templateID: json['TemplateID'],
       companyName: json['CompanyName'],
+      companyID: json['CompanyID'],
       imageUrl: json['ImageUrl'],
       averageRating: json['AverageRating'].toDouble(),
       quantityRating: json['QuantityRating'],
@@ -71,7 +76,7 @@ class Trip {
       endTime: endTime,
       emptySeat: json['EmptySeat'],
       price: json['Price'],
-      isChecked: json['isChecked'] ?? false,
+      isChecked: isChecked,
     );
   }
 }

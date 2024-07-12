@@ -3,6 +3,7 @@ import 'package:swd392/navigation_menu.dart';
 import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -25,6 +26,7 @@ class _LoginPageState extends State<LoginPage> {
 
     String emailText = EmailController.text;
     String password = passwordController.text;
+    String? _token;
 
     try {
       if (emailText.isEmpty) {
@@ -35,6 +37,12 @@ class _LoginPageState extends State<LoginPage> {
         throw ('Mật khẩu không được để trống');
       }
 
+      FirebaseMessaging.instance.getToken().then((token) {
+        setState(() {
+          _token = token;
+          print('Device token: $_token');
+        });
+      });
       Response response = await post(
         Uri.parse(
             'https://ticket-booking-swd392-project.azurewebsites.net/auth-management/managed-auths/sign-ins'),
@@ -44,6 +52,7 @@ class _LoginPageState extends State<LoginPage> {
         body: jsonEncode({
           'email': emailText,
           'password': password,
+          "deviceToken": _token,
         }),
       ).timeout(Duration(seconds: 10));
 
@@ -61,7 +70,8 @@ class _LoginPageState extends State<LoginPage> {
         );
         if (verifyResponse.statusCode == 200) {
           var verifyData = jsonDecode(verifyResponse.body);
-          if (verifyData['Success'] && verifyData['Result']['RoleName'] == 'Staff') {
+          if (verifyData['Success'] &&
+              verifyData['Result']['RoleName'] == 'Staff') {
             // Save user data to local storage
             SharedPreferences prefs = await SharedPreferences.getInstance();
             prefs.setString('userID', verifyData['Result']['User']['UserID']);

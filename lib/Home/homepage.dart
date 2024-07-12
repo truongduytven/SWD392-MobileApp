@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:swd392/Trip/list_trip.dart';
 import 'package:swd392/Trip/list_trip_all_day.dart';
+import 'package:swd392/Services/list_trip_in_day.dart';
 import 'package:swd392/Notification/notification.dart';
 import 'package:swd392/models/notification_model.dart';
 import 'package:swd392/Data/notification_data.dart';
@@ -234,7 +235,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               ),
                             ],
                           ),
-                          // SizedBox(width: 30),
+                          SizedBox(width: 30),
                           Column(
                             children: [
                               IconButton(
@@ -257,26 +258,29 @@ class _MyHomePageState extends State<MyHomePage> {
                               ),
                             ],
                           ),
-                          // SizedBox(width: 30),
-                          // Column(
-                          //   children: [
-                          //     IconButton(
-                          //       icon: Icon(Icons.schedule, size: 28),
-                          //       onPressed: () {
-                          //         // Navigate to Lịch trình
-                          //       },
-                          //     ),
-                          //     Text(
-                          //       "Lịch trình",
-                          //       style: TextStyle(
-                          //         fontSize: 18,
-                          //         fontWeight: FontWeight.w400,
-                          //         letterSpacing: 1,
-                          //         wordSpacing: 2,
-                          //       ),
-                          //     ),
-                          //   ],
-                          // ),
+                          SizedBox(width: 30),
+                          Column(
+                            children: [
+                              IconButton(
+                                icon: Icon(Icons.room_service, size: 28),
+                                onPressed: () {
+                                  Navigator.push(context,
+                                      MaterialPageRoute(builder: (context) {
+                                    return ListTripInDayPage();
+                                  }));
+                                },
+                              ),
+                              Text(
+                                "Dịch vụ",
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w400,
+                                  letterSpacing: 1,
+                                  wordSpacing: 2,
+                                ),
+                              ),
+                            ],
+                          ),
                         ],
                       ),
                     ),

@@ -5,7 +5,7 @@ import '../models/trip_model.dart';
 class TripDetailPage extends StatefulWidget {
   final Trip trip;
 
-  const   TripDetailPage({super.key, required this.trip});
+  const TripDetailPage({super.key, required this.trip});
 
   @override
   State<TripDetailPage> createState() => _TripDetailPageState();
@@ -116,6 +116,34 @@ class _TripDetailPageState extends State<TripDetailPage> {
                   fontSize: 18,
                 ),
               ),
+              SizedBox(height: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  TextButton(
+                  onPressed: () {}, 
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 20),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(30),
+                      color: Colors.orange,
+                    ),
+                    height: 50,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Danh sách vé',
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                )],
+              )
             ],
           ),
         ),

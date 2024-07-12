@@ -9,8 +9,7 @@ import 'package:swd392/Search/result_Search.dart';
 
 class ScanTicketPage extends StatefulWidget {
   final String tripID;
-  final String seatCode;
-  const ScanTicketPage({super.key, required this.tripID, required this.seatCode});
+  const ScanTicketPage({super.key, required this.tripID});
 
   @override
   State<ScanTicketPage> createState() => _ScanTicketPageState();
@@ -62,10 +61,23 @@ class _ScanTicketPageState extends State<ScanTicketPage> {
         final ticketDetail = TicketDetail.fromJson(json.decode(response.body));
         
         // Check if tripID and seatCode match
-        if (ticketDetail.tripID == widget.tripID && ticketDetail.seatCode == widget.seatCode) {
+        if (ticketDetail.tripID == widget.tripID) {
           // Close the loading modal
           Navigator.of(context).pop();
-
+          if(ticketDetail.status == "ĐÃ SỬ DỤNG") {
+            // Show toast message
+            Fluttertoast.showToast(
+              msg: "Vé đã được sử dụng!",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.TOP,
+              backgroundColor: Colors.red,
+              textColor: Colors.white,
+              fontSize: 16.0,
+            );
+            // Allow the user to scan again
+            isComplete = false;
+            return;
+          }
           // Navigate to the result screen
           Navigator.push(
             context,
@@ -77,13 +89,13 @@ class _ScanTicketPageState extends State<ScanTicketPage> {
                 ticketDetail: ticketDetail, // Pass the ticket details to the ResultSearch screen
               ),
             ),
-          ).then((value) => closeScreen());
+          );
         } else {
           // Close the loading modal
           Navigator.of(context).pop();
           // Show toast message
           Fluttertoast.showToast(
-            msg: "Số ghế hoặc chuyến đi không hợp lệ. Vui lòng kiểm tra lại!",
+            msg: "Chuyến đi không hợp lệ. Vui lòng kiểm tra lại!",
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.TOP,
             backgroundColor: Colors.red,

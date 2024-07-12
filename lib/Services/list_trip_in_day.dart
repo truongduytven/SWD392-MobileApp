@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:swd392/Trip/scan_ticket.dart';
+import 'package:swd392/Services/list_station_service.dart';
 import 'package:swd392/Trip/trip_detail.dart';
 import 'package:swd392/models/trip_model.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:fluttertoast/fluttertoast.dart';
 
-class ListTripPage extends StatefulWidget {
-  const ListTripPage({super.key});
+class ListTripInDayPage extends StatefulWidget {
+  const ListTripInDayPage({super.key});
 
   @override
-  State<ListTripPage> createState() => _ListTripPageState();
+  State<ListTripInDayPage> createState() => _ListTripInDayPageState();
 }
 
-class _ListTripPageState extends State<ListTripPage> {
+class _ListTripInDayPageState extends State<ListTripInDayPage> {
   List<Trip> trips = [];
   DateTime today = DateTime.parse('2024-07-28');
   String token = '';
@@ -106,8 +106,7 @@ class _ListTripPageState extends State<ListTripPage> {
   @override
   Widget build(BuildContext context) {
     List<String> startLocations = ['All'];
-    startLocations
-        .addAll(trips.map((trip) => trip.startLocation).toSet().toList());
+    startLocations.addAll(trips.map((trip) => trip.startLocation).toSet().toList());
 
     List<Trip> filteredTrips = getFilteredTrips();
 
@@ -121,7 +120,7 @@ class _ListTripPageState extends State<ListTripPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              'Soát vé - ',
+              'Soát dịch vụ - ',
               style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.w500,
@@ -419,8 +418,10 @@ class _ListTripPageState extends State<ListTripPage> {
                                     onPressed: () {
                                       Navigator.push(context,
                                           MaterialPageRoute(builder: (context) {
-                                        return ScanTicketPage(
+                                        return SelectStationPage(
                                           tripID: trip.tripID,
+                                          routeID: trip.routeID,
+                                          companyID: trip.companyID,
                                         );
                                       }));
                                     },
@@ -440,7 +441,7 @@ class _ListTripPageState extends State<ListTripPage> {
                                       ),
                                       child: Center(
                                         child: const Text(
-                                          'Soát vé',
+                                          'Chọn trạm',
                                           style: TextStyle(
                                             color: Colors.white,
                                             fontWeight: FontWeight.bold,
