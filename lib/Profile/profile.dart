@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'package:swd392/Login/login.dart';
@@ -19,6 +20,7 @@ class _ProfilePageState extends State<ProfilePage> {
   String address = '';
   String email = '';
   String userID = '';
+  String userName = '';
 
   @override
   void initState() {
@@ -43,10 +45,9 @@ class _ProfilePageState extends State<ProfilePage> {
         context: context,
         builder: (context) {
           return Center(
-            child: CircularProgressIndicator(
-              color: Colors.orange.shade600,
-            )
-          );
+              child: CircularProgressIndicator(
+            color: Colors.orange.shade600,
+          ));
         });
     final response = await http.get(
       Uri.parse(
@@ -62,9 +63,20 @@ class _ProfilePageState extends State<ProfilePage> {
         fullName = data['FullName']; // Example value
         phoneNumber = data['PhoneNumber']; // Example value
         address = data['Address']; // Example value
-        email = data['Email']; // Example value
+        email = data['Email'];
+        userName = data['UserName']; // Example value
+
         Navigator.of(context).pop();
       });
+      Fluttertoast.showToast(
+        msg: "Cập nhật hồ sơ thành công!",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.TOP,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.green,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
     } else {
       // Handle the error
       print('Failed to load user data');
@@ -84,15 +96,6 @@ class _ProfilePageState extends State<ProfilePage> {
           icon: Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () {},
         ),
-        actions: [
-          IconButton(
-            icon: Icon(
-              Icons.settings,
-              color: Colors.black,
-            ),
-            onPressed: () {},
-          )
-        ],
       ),
       body: Container(
         padding: EdgeInsets.only(left: 30, top: 20, right: 30),
@@ -182,7 +185,9 @@ class _ProfilePageState extends State<ProfilePage> {
                             phoneNumber: phoneNumber,
                             address: address,
                             email: email,
-                            avatarUrl: "assets/mytien.jpg",
+                            avatarUrl: "assets/avatar.jpg",
+                            userName: userName,
+                            userID: userID,
                           );
                         }));
                       },

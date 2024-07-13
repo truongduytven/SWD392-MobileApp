@@ -7,7 +7,10 @@ import 'package:swd392/Notification/notification.dart';
 import 'package:swd392/models/notification_model.dart';
 import 'package:swd392/Data/notification_data.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
+import 'package:swd392/models/trip_model.dart';
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key}) : super(key: key);
 
@@ -15,9 +18,12 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyHomePageState extends State<MyHomePage> with AutomaticKeepAliveClientMixin {
   String userName = '';
-
+  String token = '';
+  String userID = '';
+  List<Trip> trips = [];
+  List<Trip> checkedTrips = [];
   @override
   void initState() {
     super.initState();
@@ -29,10 +35,49 @@ class _MyHomePageState extends State<MyHomePage> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       userName = prefs.getString('userName') ?? '';
+      token = prefs.getString('token') ?? '';
+      userID = prefs.getString('userID') ?? '';
     });
+    fetchTripsData();
   }
+
+  Future<void> fetchTripsData() async {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return Center(child: CircularProgressIndicator());
+        });
+    final String dateString = '2024-07-28';
+    try {
+      final response = await http.get(
+        Uri.parse(
+            'https://ticket-booking-swd392-project.azurewebsites.net/trip-management/managed-trips/staff/${userID}/start-time/${dateString}'),
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+      );
+      if (response.statusCode == 200) {
+        List<dynamic> jsonResponse = json.decode(response.body);
+        
+        setState(() {
+          trips =
+              jsonResponse.map((tripJson) => Trip.fromJson(tripJson)).toList();
+          checkedTrips = trips.where((trip) => trip.isChecked).toList();
+        });
+        Navigator.of(context).pop();
+      } else {
+        Navigator.of(context).pop();
+        throw Exception('Failed to load trips');
+      }
+    } catch (error) {
+      Navigator.of(context).pop();
+      print('Error fetching trips: $error');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     List<NotificationModel> unreadNotifications =
         notifications.where((notif) => !notif.read).toList();
 
@@ -143,7 +188,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             children: <Widget>[
                               Center(
                                 child: Text(
-                                  "12",
+                                  checkedTrips.length.toString(),
                                   style: TextStyle(
                                     fontSize: 30,
                                     fontWeight: FontWeight.w600,
@@ -173,7 +218,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: <Widget>[
                               Text(
-                                "20",
+                                trips.length.toString(),
                                 style: TextStyle(
                                   fontSize: 30,
                                   fontWeight: FontWeight.w600,
@@ -335,8 +380,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               final notification = unreadNotifications[index];
                               return Container(
                                 padding: EdgeInsets.all(10),
-                                margin: EdgeInsets.symmetric(
-                                    vertical: 5),
+                                margin: EdgeInsets.symmetric(vertical: 5),
                                 decoration: BoxDecoration(
                                     color: notification.read
                                         ? Colors.white
@@ -392,4 +436,6 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     );
   }
+  @override
+  bool get wantKeepAlive => true;
 }

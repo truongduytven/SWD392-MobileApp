@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:swd392/navigation_menu.dart';
 import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -16,6 +17,19 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController EmailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   String? errorText;
+  String? _token;
+
+  @override
+  void initState() {
+    super.initState();
+
+    FirebaseMessaging.instance.getToken().then((token) {
+      setState(() {
+        _token = token;
+        print('Device token: $_token');
+      });
+    });
+  }
 
   void login() async {
     showDialog(
@@ -26,7 +40,6 @@ class _LoginPageState extends State<LoginPage> {
 
     String emailText = EmailController.text;
     String password = passwordController.text;
-    String? _token;
 
     try {
       if (emailText.isEmpty) {
@@ -37,12 +50,6 @@ class _LoginPageState extends State<LoginPage> {
         throw ('Mật khẩu không được để trống');
       }
 
-      FirebaseMessaging.instance.getToken().then((token) {
-        setState(() {
-          _token = token;
-          print('Device token: $_token');
-        });
-      });
       Response response = await post(
         Uri.parse(
             'https://ticket-booking-swd392-project.azurewebsites.net/auth-management/managed-auths/sign-ins'),
@@ -56,6 +63,7 @@ class _LoginPageState extends State<LoginPage> {
         }),
       ).timeout(Duration(seconds: 10));
 
+      print('Email: $emailText, Password: $password, Token: $_token');
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
         String accessToken = data['AccessToken'];
@@ -81,22 +89,53 @@ class _LoginPageState extends State<LoginPage> {
             prefs.setString('email', verifyData['Result']['User']['Email']);
 
             // Navigate to the homepage
-            Navigator.of(context).pop(); // Close the loading dialog
+            Navigator.of(context).pop();
+            Fluttertoast.showToast(
+              msg: "Đăng nhập thành công!",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.TOP,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.green,
+              textColor: Colors.white,
+              fontSize: 16.0,
+            );
+            Duration(seconds: 1);
             WidgetsBinding.instance.addPostFrameCallback((_) {
               Navigator.push(context, MaterialPageRoute(builder: (context) {
                 return NavigationMenu();
               }));
             });
+            // Close the loading dialog
             return;
           } else {
             setState(() {
               errorText = 'You are not authorized to access this app';
             });
+            Navigator.of(context).pop();
+            Fluttertoast.showToast(
+              msg: "Bạn không có quyền truy cập ứng dụng này!",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.TOP,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.green,
+              textColor: Colors.white,
+              fontSize: 16.0,
+            );
           }
         } else {
           setState(() {
             errorText = 'Token verification failed';
           });
+          Navigator.of(context).pop();
+          Fluttertoast.showToast(
+            msg: "Kiểm tra người dùng không hợp lệ",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.TOP,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.green,
+            textColor: Colors.white,
+            fontSize: 16.0,
+          );
         }
       } else {
         setState(() {
@@ -263,39 +302,39 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                         ),
                         SizedBox(height: 40),
-                        Text(
-                          'Tiếp tục với Google',
-                          style: TextStyle(color: Colors.grey),
-                        ),
-                        SizedBox(height: 40),
-                        TextButton(
-                          onPressed: () {},
-                          child: Container(
-                            height: 50,
-                            margin: EdgeInsets.symmetric(horizontal: 50),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(50),
-                              color: Colors.blue,
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  'Google',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                SizedBox(width: 10),
-                                Icon(
-                                  Icons.g_mobiledata_rounded,
-                                  color: Colors.white,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
+                        // Text(
+                        //   'Tiếp tục với Google',
+                        //   style: TextStyle(color: Colors.grey),
+                        // ),
+                        // SizedBox(height: 40),
+                        // TextButton(
+                        //   onPressed: () {},
+                        //   child: Container(
+                        //     height: 50,
+                        //     margin: EdgeInsets.symmetric(horizontal: 50),
+                        //     decoration: BoxDecoration(
+                        //       borderRadius: BorderRadius.circular(50),
+                        //       color: Colors.blue,
+                        //     ),
+                        //     child: Row(
+                        //       mainAxisAlignment: MainAxisAlignment.center,
+                        //       children: [
+                        //         Text(
+                        //           'Google',
+                        //           style: TextStyle(
+                        //             color: Colors.white,
+                        //             fontWeight: FontWeight.bold,
+                        //           ),
+                        //         ),
+                        //         SizedBox(width: 10),
+                        //         Icon(
+                        //           Icons.g_mobiledata_rounded,
+                        //           color: Colors.white,
+                        //         ),
+                        //       ],
+                        //     ),
+                        //   ),
+                        // ),
                       ],
                     )),
               ),
