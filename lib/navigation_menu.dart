@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:swd392/Home/homepage.dart';
 import 'package:swd392/Login/login.dart';
-import 'package:swd392/Notification/notification.dart';
 import 'package:swd392/Profile/profile.dart';
 import 'package:swd392/Search/search_ticket.dart';
 import 'package:shared_preferences/shared_preferences.dart'; // Ensure you import the LoginPage
@@ -58,11 +57,11 @@ class _NavigationMenuState extends State<NavigationMenu> {
                 selectedIcon: Icon(Icons.qr_code, color: Colors.white),
                 label: "Tra cứu",
               ),
-              NavigationDestination(
-                icon: Icon(Icons.notifications, size: 30),
-                selectedIcon: Icon(Icons.notifications, color: Colors.white),
-                label: "Thông báo",
-              ),
+              // NavigationDestination(
+              //   icon: Icon(Icons.notifications, size: 30),
+              //   selectedIcon: Icon(Icons.notifications, color: Colors.white),
+              //   label: "Thông báo",
+              // ),
               NavigationDestination(
                 icon: Icon(Icons.person, size: 30),
                 selectedIcon: Icon(Icons.person, color: Colors.white),
@@ -90,9 +89,9 @@ class _NavigationMenuState extends State<NavigationMenu> {
         return MyHomePage(); // Home Page
       case 1:
         return SearchTicketPage(); // Search Ticket Page
+      // case 2:
+      //   return NotificationPage(); // Notification Page
       case 2:
-        return NotificationPage(); // Notification Page
-      case 3:
         return ProfilePage(); // Profile Page
       default:
         return MyHomePage(); // Default to Home Page

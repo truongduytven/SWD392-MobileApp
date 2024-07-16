@@ -17,7 +17,7 @@ class ListTripInDayPage extends StatefulWidget {
 
 class _ListTripInDayPageState extends State<ListTripInDayPage> {
   List<Trip> trips = [];
-  DateTime today = DateTime.parse('2024-07-28');
+  DateTime today = DateTime.parse('2024-07-16');
   String token = '';
   String userID = '';
   String filter = 'All';
@@ -47,7 +47,7 @@ class _ListTripInDayPageState extends State<ListTripInDayPage> {
         builder: (context) {
           return Center(child: CircularProgressIndicator());
         });
-    final String dateString = '2024-07-28';
+    final String dateString = '2024-07-16';
     try {
       final response = await http.get(
         Uri.parse(
