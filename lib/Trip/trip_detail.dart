@@ -117,33 +117,33 @@ class _TripDetailPageState extends State<TripDetailPage> {
                 ),
               ),
               SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  TextButton(
-                  onPressed: () {}, 
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 20),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(30),
-                      color: Colors.orange,
-                    ),
-                    height: 50,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          'Danh sách vé',
-                          style: TextStyle(
-                            fontSize: 18,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                )],
-              )
+              // Row(
+              //   mainAxisAlignment: MainAxisAlignment.center,
+              //   children: [
+              //     TextButton(
+              //     onPressed: () {}, 
+              //     child: Container(
+              //       padding: EdgeInsets.symmetric(horizontal: 20),
+              //       decoration: BoxDecoration(
+              //         borderRadius: BorderRadius.circular(30),
+              //         color: Colors.orange,
+              //       ),
+              //       height: 50,
+              //       child: Column(
+              //         mainAxisAlignment: MainAxisAlignment.center,
+              //         children: [
+              //           Text(
+              //             'Danh sách vé',
+              //             style: TextStyle(
+              //               fontSize: 18,
+              //               color: Colors.white,
+              //             ),
+              //           ),
+              //         ],
+              //       ),
+              //     ),
+              //   )],
+              // )
             ],
           ),
         ),

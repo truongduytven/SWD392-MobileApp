@@ -88,6 +88,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
       final response = await http.put(
         Uri.parse(
             'https://ticket-booking-swd392-project.azurewebsites.net/user-management/managed-users/${widget.userID}'),
+        body: requestData,
         headers: {
           'Authorization': 'Bearer $token',
         },
